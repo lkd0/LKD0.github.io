@@ -1,0 +1,414 @@
+/* ================================================================
+   李凯迪 · 作品集网站样式表
+   风格:纸质杂志 × 终端
+   ================================================================ */
+
+/* ---------- 0. 设计令牌(CSS 变量) ----------
+   :root 是"全局作用域"。把颜色/字体定义成变量,想换主题改一处即可。
+   面试考点:"你如何组织大型项目的 CSS 变量?" —— 全局令牌+组件局部变量 */
+:root {
+  --paper: #f4efe4;        /* 米色纸底 */
+  --paper-deep: #ece5d3;   /* 深一档的纸色,给卡片做底 */
+  --ink: #1a1713;          /* 墨黑(文字主色) */
+  --ink-soft: #5c564a;     /* 淡墨(次要文字) */
+  --vermilion: #d84315;    /* 朱红(点睛色,全站唯一强调色) */
+  --hairline: #d5cdb9;     /* 发丝分割线 */
+
+  --font-display: "Fraunces", "Noto Serif SC", serif;
+  --font-body: "Noto Serif SC", "Fraunces", serif;
+  --font-mono: "IBM Plex Mono", monospace;
+
+  --wide: 1080px; /* 内容最大宽度,超宽屏不放大而是留白 */
+}
+
+/* ---------- 1. 最小化重置 ----------
+   浏览器默认样式表很古早,先统一地基。
+   面试考点:"*{box-sizing:border-box} 解决了什么问题?"
+   —— 默认 width 不含 padding,加 padding 就撑破布局;border-box 让"说多宽就多宽" */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth; /* 锚点跳转从"瞬移"变"平滑滚动",一行 CSS 的优雅 */
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.7;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden; /* 防止装饰元素造成横向滚动条 */
+}
+
+/* 纸张颗粒感:内嵌一张 tiny SVG 噪点图平铺,透明度压到 5%。
+   面试考点:知道 ::before/::after 伪元素吗?—— 不用往 HTML 塞多余标签就能加装饰 */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0; /* = top/right/bottom/left 全 0,一行搞定全屏 */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  opacity: 0.05;
+  pointer-events: none; /* 装饰层绝不能挡点击!血泪教训 */
+  z-index: 999;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------- 2. 通用排版零件 ---------- */
+
+/* clamp(最小值, 理想值, 最大值):流式字体的核心。
+   5.5vw 意思是"视口宽度每 100px 字体涨 5.5px",大小屏自动缩放,
+   不用写一堆媒体查询断点调字号。面试爱考:"如何做到不用 JS 的适配?" */
+.section {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 96px 32px;
+}
+
+.section__title {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  border-top: 2px solid var(--ink); /* 杂志栏目头:一条粗线,立刻"编辑部" */
+  padding-top: 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 20px;
+  margin-bottom: 48px;
+}
+
+.section__num {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--vermilion);
+  font-weight: 500;
+}
+
+/* ---------- 3. 导航栏 ---------- */
+.nav {
+  position: sticky;
+  top: 0; /* 面试高频:"sticky 和 fixed 区别?"—— sticky 在文档流里,滚到顶才钉住 */
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 32px;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(8px); /* 毛玻璃:滚动时导航半透明,现代感一步到位 */
+  border-bottom: 1px solid var(--hairline);
+}
+
+.nav__logo {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}
+
+/* 终端光标闪烁:CSS 动画最小完整案例(关键帧定义 + 选择器应用) */
+@keyframes blink {
+  50% { opacity: 0; }
+}
+.nav__cursor {
+  color: var(--vermilion);
+  animation: blink 1.1s steps(1) infinite; /* steps(1) 让渐变闪烁变"硬切",更像真光标 */
+}
+
+.nav__links {
+  display: flex;
+  gap: 28px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+/* :hover 伪类下划线动画——从中间向两边"长出来" */
+.nav__links a {
+  position: relative;
+  padding-bottom: 4px;
+}
+.nav__links a::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--vermilion);
+  transition: all 0.25s ease;
+}
+.nav__links a:hover::after {
+  left: 0;
+  width: 100%;
+}
+
+/* ---------- 4. Hero 开场 ---------- */
+.hero {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: clamp(80px, 16vh, 180px) 32px 96px;
+}
+
+.hero__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 24px;
+}
+
+.hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(52px, 11vw, 150px); /* 巨号标题,杂志的"开场暴击" */
+  font-weight: 900;
+  line-height: 1.04;
+  letter-spacing: -0.02em; /* 大号字要收紧字距,否则显得松垮 */
+}
+
+.hero__title em {
+  font-style: italic;
+  color: var(--vermilion); /* 全站唯一强调色出现在最想被看见的词上 */
+}
+
+.hero__dot {
+  color: var(--vermilion);
+}
+
+.hero__sub {
+  margin-top: 32px;
+  max-width: 460px;
+  font-size: 18px;
+  color: var(--ink-soft);
+}
+
+.hero__meta {
+  margin-top: 40px;
+  display: flex;
+  gap: 32px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--ink-soft);
+  flex-wrap: wrap; /* 放不下自动换行,响应式的懒人开关 */
+}
+.hero__meta b { color: var(--vermilion); font-weight: 500; }
+
+.hero__cta {
+  display: inline-block;
+  margin-top: 56px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  padding: 14px 28px;
+  border: 1.5px solid var(--ink);
+  transition: all 0.25s ease;
+}
+/* 悬停反色:朴素但极有效的按钮反馈 */
+.hero__cta:hover {
+  background: var(--ink);
+  color: var(--paper);
+  transform: translateY(-2px); /* 轻微上浮 */
+  box-shadow: 4px 4px 0 var(--vermilion); /* 硬阴影:波普/杂志感的关键细节 */
+}
+
+/* ---------- 5. 关于我 ---------- */
+.about {
+  display: grid;
+  /* 1.6fr 1fr = 左右列按比例分宽。面试考点:"Grid 和 Flex 什么时候用哪个?"
+     —— 二维布局(行列都要管)用 Grid,一维排队用 Flex */
+  grid-template-columns: 1.6fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.about__text {
+  font-size: 19px;
+  line-height: 1.9;
+}
+
+.about__facts {
+  list-style: none;
+  border-left: 2px solid var(--vermilion); /* 便签条样式的事实清单 */
+  padding-left: 24px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  display: grid;
+  gap: 14px;
+}
+.about__facts b {
+  color: var(--ink-soft);
+  font-weight: 400;
+  margin-right: 16px;
+  display: inline-block;
+  min-width: 3.5em; /* 冒号对齐的秘密:标签固定最小宽度 */
+}
+
+/* ---------- 6. 作品卡片 ---------- */
+/* repeat(auto-fit, minmax(...)) 是最优雅的响应式网格:
+   一行代码"能放几列放几列,放不下自动换行"——不用写媒体查询!高频考点 */
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: var(--paper-deep);
+  border: 1px solid var(--hairline);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 6px 8px 0 var(--ink); /* 悬停浮起+硬阴影,和 CTA 按钮呼应 */
+}
+
+.card__status {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--vermilion);
+  border: 1px dashed var(--vermilion); /* 虚线边框=施工中的语义 */
+  padding: 3px 10px;
+}
+
+.card__title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.card__desc {
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  flex: 1; /* 弹性填充:保证每张卡片底部标签对齐同一条线 */
+}
+
+.card__tags {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+  border-top: 1px solid var(--hairline);
+  padding-top: 12px;
+}
+
+/* ---------- 7. 技能条(兑现上集的伏笔!) ----------
+   属性选择器 [data-level="80"]:CSS 可以直接读 HTML 的 data-* 值。
+   HTML 存数据 → CSS 按数据出样式,这就是"数据驱动"的最初级形态 */
+.skills {
+  list-style: none;
+  display: grid;
+  gap: 22px;
+  max-width: 640px;
+}
+
+.skill {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+/* ::after 画进度条本体 */
+.skill::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--ink);
+  width: var(--level, 0%); /* 读局部变量 --level,默认 0% */
+  transition: width 1s ease 0.3s;
+}
+/* (已删除原来写死的 6 条 data-level 规则)
+   现在 --level 由 JS 在元素滚入视口时动态注入——数据在 HTML,触发逻辑在 JS,
+   样式表只管"怎么画"。这才是三者正确的分工 */
+
+/* ---------- 8. 联系 & 页脚 ---------- */
+.contact__lead { font-size: 18px; margin-bottom: 28px; }
+
+.contact__links {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.contact__links a {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 30px);
+  font-weight: 700;
+  border-bottom: 2px solid var(--ink);
+  transition: color 0.2s, border-color 0.2s;
+}
+.contact__links a:hover {
+  color: var(--vermilion);
+  border-color: var(--vermilion);
+}
+
+.footer {
+  border-top: 2px solid var(--ink);
+  padding: 40px 32px 60px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+.footer__mono {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  margin-top: 12px;
+  color: var(--vermilion);
+}
+
+/* ---------- 8.5 滚动渐显(JS 配合) ----------
+   思路:JS 给元素加 .js-reveal 表示"待入场",滚入视口后再加 .is-in 触发过渡。
+   为什么初始状态藏在 JS 里而不是 CSS 里?——渐进增强:用户禁用 JS 时
+   元素不会永远隐身,内容照样可读。面试加分点 */
+.js-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition-delay: calc(var(--stagger, 0) * 90ms); /* 同组元素逐个错开入场 */
+}
+.js-reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* 打字机结果:朱红等宽,像终端回显 */
+.nav__output {
+  color: var(--vermilion);
+  font-weight: 500;
+}
+
+/* ---------- 9. 响应式:小屏改造 ----------
+   移动优先 vs 桌面优先:这里是"桌面样式为主,小屏覆盖",叫降级式断点。
+   面试考点:"max-width 和 min-width 媒体查询的区别?" */
+@media (max-width: 720px) {
+  .section { padding: 64px 20px; }
+  .nav__links { gap: 16px; }          /* 缩小间距,先不藏菜单——四个链接还放得下 */
+  .about { grid-template-columns: 1fr; gap: 40px; } /* 两栏塌成一栏 */
+  .section__title { flex-wrap: wrap; gap: 8px; }
+}
+
+/* ---------- 10. 无障碍彩蛋 ----------
+   用户系统开了"减弱动态效果"就关掉动画。一行媒体查询,体现工程素养,
+   初级候选人里几乎没人写——面试官看到会加分 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

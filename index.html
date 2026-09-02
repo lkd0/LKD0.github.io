@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!-- ↑ 这行告诉浏览器:这是 HTML5 文档,必须放在最前面 -->
+<html lang="zh-CN">
+<!-- lang="zh-CN" 影响浏览器断行/字体选择,对 SEO 也重要。面试考点:你知道 lang 属性有什么用吗? -->
+
+<head>
+  <meta charset="UTF-8">
+  <!-- 字符编码:不设的话中文会乱码。面试高频题:"UTF-8 和 GBK 区别?" -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- ↑ 移动端适配的钥匙!没有这行,手机上页面会缩小成"桌面页截图"。面试必考 -->
+  <title>李凯迪 — 前端开发求职者</title>
+  <!-- TODO: 把"张三"换成你的名字 -->
+  <meta name="description" content="区块链专业出身的前端学习者,这里是我的作品集。">
+
+  <!-- 引入字体:Fraunces(杂志衬线,管英文标题) + Noto Serif SC(中文字体) + IBM Plex Mono(等宽,终端感标签) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@400;700;900&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <!-- ↑ 样式表下一部分才写,现在先挂上链接,页面会"裸奔"(无样式)——这是正常的!
+       HTML 管结构和内容,CSS 管长相,职责分离。面试考点:"结构/表现分离说的是什么?" -->
+</head>
+
+<body>
+
+  <!-- ============ 导航栏 ============ -->
+  <!-- header/nav 是"语义化标签":对搜索引擎和读屏软件友好。
+       面试考点:"div 和语义化标签的区别?"——答不上来等于暴露你是背代码的 -->
+  <header class="nav">
+    <a href="#" class="nav__logo">$ whoami<span class="nav__cursor">_</span><span class="nav__output" id="whoami-output"></span></a>
+    <!-- ↑ 新增 #whoami-output:JS 会把你的名字"打字"进这个空壳 -->
+    <!-- 锚点导航:点击跳到页内对应 section,原理是 href="#id" -->
+    <nav class="nav__links">
+      <a href="#about">关于</a>
+      <a href="#projects">作品</a>
+      <a href="#skills">技能</a>
+      <a href="#contact">联系</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- main 标签一个页面只能有一个,包裹页面核心内容 -->
+
+    <!-- ============ 区块 1:Hero 开场 ============ -->
+    <section class="hero" id="hero">
+      <p class="hero__eyebrow">前端学习者 / 区块链技术应用专业</p>
+      <h1 class="hero__title">
+        把想法<br>
+        <em>编译</em>成界面<span class="hero__dot">.</span>
+      </h1>
+      <!-- h1 全页只放一个,是 SEO 权重最高的标题。em 在这里表强调,视觉上做成斜体朱红 -->
+      <p class="hero__sub">
+        我是李凯迪。正在用 12 周,从零到能交出四个真实上线的前端作品。
+        <!-- TODO: 换成你自己的故事,一句话即可 -->
+      </p>
+      <div class="hero__meta">
+        <span>坐标:杭州 · 可远程</span><!-- TODO 换城市 -->
+        <span>状态:<b>求职中 / 前端实习·初级</b></span>
+      </div>
+      <a href="#projects" class="hero__cta">向下看作品 ↓</a>
+    </section>
+
+    <!-- ============ 区块 2:关于我 ============ -->
+    <section class="section" id="about">
+      <h2 class="section__title"><span class="section__num">01</span>关于我 / ABOUT</h2>
+      <div class="about">
+        <p class="about__text">
+          区块链专业让我习惯和代码打交道:写过合约测试、用过 ethers.js 调链上数据,
+          于是很自然地走向了离用户更近的一端——前端。
+          我喜欢把一个空白页面变成能用的东西的过程,这种"即时反馈"让我着迷。
+          <!-- TODO: 上面是给你参考的文案模板,务必改写成自己的真实经历!
+               面试官看"关于我"就是看你是不是个"活人",模板腔是大忌 -->
+        </p>
+        <ul class="about__facts">
+          <li><b>专业</b>区块链技术应用</li>
+          <li><b>方向</b>前端开发(React)</li>
+          <li><b>自学</b>MDN / JavaScript 高级程序设计</li>
+          <li><b>目标</b>拿到前端实习 / 初级岗位</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ 区块 3:作品 ============ -->
+    <!-- 现在是占位卡片。等做完 ①天气App ②看板 ③Web3数据浏览器,
+         就把真项目换进来——这也正是你接下来的学习路线 -->
+    <section class="section" id="projects">
+      <h2 class="section__title"><span class="section__num">02</span>作品集 / WORK</h2>
+      <div class="projects">
+        <article class="card">
+          <span class="card__status">建设中</span>
+          <h3 class="card__title">天气聚合查询</h3>
+          <p class="card__desc">原生 JS 调用公开 API,练习 fetch、异步与错误处理。</p>
+          <p class="card__tags">HTML · CSS · JavaScript · Open-Meteo API</p>
+        </article>
+        <article class="card">
+          <span class="card__status">建设中</span>
+          <h3 class="card__title">任务看板</h3>
+          <p class="card__desc">类 Trello 拖拽看板,React 全家桶:组件、路由、状态管理。</p>
+          <p class="card__tags">React · Router · localStorage</p>
+        </article>
+        <article class="card">
+          <span class="card__status">建设中</span>
+          <h3 class="card__title">链上数据浏览器</h3>
+          <p class="card__desc">输入钱包地址展示余额与交易,专业背景与前端的结合点。</p>
+          <p class="card__tags">React · Etherscan API · ethers.js</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ 区块 4:技能 ============ -->
+    <section class="section" id="skills">
+      <h2 class="section__title"><span class="section__num">03</span>技能栈 / STACK</h2>
+      <ul class="skills">
+        <!-- data-level 属性:自定义 data-* 是 HTML 的"储物格",CSS/JS 都能读它。
+             下一部分 CSS 会用它画熟练度条——先埋个伏笔 -->
+        <li class="skill" data-level="80">HTML5 / 语义化</li>
+        <li class="skill" data-level="70">CSS3 / 响应式布局</li>
+        <li class="skill" data-level="60">JavaScript(ES6+)</li>
+        <li class="skill" data-level="40">React</li>
+        <li class="skill" data-level="50">Git / GitHub</li>
+        <li class="skill" data-level="30">TypeScript</li>
+      </ul>
+    </section>
+
+    <!-- ============ 区块 5:联系 ============ -->
+    <section class="section" id="contact">
+      <h2 class="section__title"><span class="section__num">04</span>联系我 / CONTACT</h2>
+      <p class="contact__lead">正在找前端实习 / 初级岗位,欢迎联系:</p>
+      <div class="contact__links">
+        <a href="mailto:zhangsan@example.com">📮 zhangsan@example.com</a>
+        <!-- href="mailto:..." 点击直接唤起邮件客户端,零成本小技巧 -->
+        <a href="https://github.com/yourname" target="_blank">GitHub ↗</a>
+        <!-- target="_blank" 新标签页打开。TODO: 第三部分学 Git 后把链接换成你自己的 -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year">2026</span> 李凯迪 · 本页面为手写 HTML/CSS,无框架、无模板 — 这本身就是作品的一部分。</p>
+    <p class="footer__mono">BUILD IN PROGRESS · COMMIT BY COMMIT</p>
+  </footer>
+
+</body>
+
+<!-- 放 body 末尾的传统写法。面试考点:"script 标签放 head 和放 body 底部有何区别?"
+     —— 现代答案:defer 属性让脚本并行下载、DOM 就绪后执行,放哪都行 -->
+<script src="script.js"></script>
+</html>
