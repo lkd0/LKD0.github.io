@@ -284,6 +284,17 @@ a {
   border: 1px dashed var(--vermilion); /* 虚线边框=施工中的语义 */
   padding: 3px 10px;
 }
+/* 状态变体:已上线的项目用实心徽章,和"建设中"虚线形成视觉层级 */
+.card__status--live {
+  color: var(--paper);
+  background: var(--ink);
+  border-style: solid;
+  border-color: var(--ink);
+}
+.card__link {
+  color: inherit;
+  text-decoration: none;
+}
 
 .card__title {
   font-family: var(--font-display);
