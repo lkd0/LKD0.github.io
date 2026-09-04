@@ -82,8 +82,8 @@
     </section>
 
     <!-- ============ 区块 3:作品 ============ -->
-    <!-- 现在是占位卡片。等做完 ①天气App ②看板 ③Web3数据浏览器,
-         就把真项目换进来——这也正是你接下来的学习路线 -->
+    <!-- 每上线一个项目,就把对应的"建设中"卡片换成已上线格式
+         (card__status--live + card__link),然后 commit + push 即刻生效 -->
     <section class="section" id="projects">
       <h2 class="section__title"><span class="section__num">02</span>作品集 / WORK</h2>
       <div class="projects">
@@ -94,10 +94,10 @@
           <p class="card__tags">HTML · CSS · JavaScript · Open-Meteo API</p>
         </article>
         <article class="card">
-          <span class="card__status">建设中</span>
-          <h3 class="card__title">任务看板</h3>
-          <p class="card__desc">类 Trello 拖拽看板,React 全家桶:组件、路由、状态管理。</p>
-          <p class="card__tags">React · Router · localStorage</p>
+          <span class="card__status card__status--live">已上线 ↗</span>
+          <h3 class="card__title"><a href="https://lkd0.github.io/taskboard/" target="_blank" class="card__link">任务看板</a></h3>
+          <p class="card__desc">第一个 React 应用:组件拆分与单向数据流,零依赖库实现原生拖拽,localStorage 持久化。</p>
+          <p class="card__tags">React · Vite · HTML5 Drag &amp; Drop</p>
         </article>
         <article class="card">
           <span class="card__status">建设中</span>
