@@ -262,6 +262,7 @@ a {
 }
 
 .card {
+  position: relative; /* ★ stretched link 的地基:给内部 ::after 绝对定位当参照 */
   background: var(--paper-deep);
   border: 1px solid var(--hairline);
   padding: 28px;
@@ -294,6 +295,19 @@ a {
 .card__link {
   color: inherit;
   text-decoration: none;
+}
+/* ★ "拉伸链接"(stretched link)模式:借链接自己的 ::after 铺一层
+   隐形大网盖住整张卡(inset:0 以 .card 为参照),点卡片任意位置都能跳。
+   链接元素本体还在,键盘 Tab / 读屏软件照常工作——比用 JS 绑 click 高级。
+   Material Design、各种卡片组件库都是这个套路 */
+.card__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+/* 悬停时标题变朱红:告诉用户"这张卡能点"(可点击的反馈提示) */
+.card:hover .card__link {
+  color: var(--vermilion);
 }
 
 .card__title {
